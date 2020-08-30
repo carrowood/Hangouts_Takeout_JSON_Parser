@@ -1,0 +1,68 @@
+﻿<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Hangouts Conversation</title>
+
+    <style>
+        .HeaderText {
+            color: black;
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
+            padding: 10px 10px 10px 10px;
+
+        }
+        .MessageList {
+            border-radius: 25px;
+            background-color: steelblue;
+            max-width: 600px;
+            margin: auto;
+            padding: 10px 10px 10px 10px;
+        }
+
+        .MessageFromSelf {
+            padding: 10px 10px 10px 10px;
+            border-radius: 25px;
+            background-color: gainsboro;
+            margin: 10px 5px 5px 220px;
+            max-width: 350px;
+            justify-items: right;
+        }
+
+
+        .MessageFromOther {
+            padding: 10px 10px 10px 10px;
+            border-radius: 25px;
+            background-color: aliceblue;
+            margin:10px 5px 5px 15px;
+            max-width: 350px;
+        }
+
+        .MessageContent {
+            color: black;
+        }
+
+        .SelfSenderName {
+            color: blue;
+            font-weight: bold;
+        }
+
+        .SenderName {
+            color: red;
+            font-weight: bold;
+        }
+
+        .MsgTimeStamp {
+            color: black;
+            font-weight: bold;
+        }
+    </style>
+    </head>
+
+    <body>
+        <script src="js/scripts.js"></script>
+        <div class="HeaderText">%%HEADERTEXT%%</div>
+        <div class="MessageList">

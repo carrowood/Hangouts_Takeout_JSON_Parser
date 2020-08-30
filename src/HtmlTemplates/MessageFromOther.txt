@@ -1,0 +1,5 @@
+﻿<div class="MessageFromOther">
+	<span class="SenderName">%%SENDERNAME%%</span> 
+	<span class="MsgTimeStamp">%%MESSAGETIMESTAMP%%:</span> 
+	<div class="MessageContent">%%MESSAGE%%</div>
+</div>
