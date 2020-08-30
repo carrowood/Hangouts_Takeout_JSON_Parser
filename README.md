@@ -12,6 +12,8 @@ Google allows you to export data from your account using a service referred to a
 ## Output
 A directory named "output" is created in the same directory where this application is started.  In it, a subdirectory is created for each "conversation" between people that it finds.  In each subdirectory, an HTML file is created, one per month, containing the formatted and easily readable chat converwsations.  The timestamps will be displayed in the local time of the user running the application and a note at the top of each file will identify the exact timezone/offset of the timestamps.  See example below.
 
+The styling of the html can easily be modified by editing the "header.txt" file before running the application if one knows the basics of stylesheets.  Each html file has a "style" section embedded.
+
 ## Usage
 Usage: Hangouts-Takeout-JSON-Parser.exe "C:\Temp\My Dir\Hangouts.json"
 
