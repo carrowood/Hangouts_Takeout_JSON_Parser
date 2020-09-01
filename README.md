@@ -1,5 +1,5 @@
 # Hangouts_Takeout_JSON_Parser
-A command line console app to create HTML chat conversation files from a "takeout" export JSON file.
+A command line console app to re-create HTML chat conversation files from a "takeout" export JSON file of Hangout's history.
 
 ## Background
 I simply wanted a way to back up all of my chat conversations from Google's Hangouts in a format that was easy to store, easy to read and easy to search. There are several websites that claim to do this, but there is no way I am going to upload years of my chat history to a strange server. 
@@ -11,6 +11,8 @@ Google allows you to export data from your account using a service referred to a
 
 ## Output
 A directory named "output" is created in the same directory where this application is started.  In it, a subdirectory is created for each "conversation" between people that it finds.  In each subdirectory, an HTML file is created, one per month, containing the formatted and easily readable chat converwsations.  The timestamps will be displayed in the local time of the user running the application and a note at the top of each file will identify the exact timezone/offset of the timestamps.  See example below.
+
+The styling of the html can easily be modified by editing the "header.txt" file before running the application if one knows the basics of stylesheets.  Each html file has a "style" section embedded.
 
 ## Usage
 Usage: Hangouts-Takeout-JSON-Parser.exe "C:\Temp\My Dir\Hangouts.json"
