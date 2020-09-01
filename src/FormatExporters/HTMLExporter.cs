@@ -129,7 +129,7 @@ namespace Hangouts_Takeout_JSON_Parser.FormatExporters
                 content = content.Replace("%%SENDERNAME%%", senderName);
             }
 
-            content = content.Replace("%%MESSAGETIMESTAMP%%", eventDateTime.ToString("yyyy-MM-dd hh:mm:ss"));
+            content = content.Replace("%%MESSAGETIMESTAMP%%", eventDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
             content = content.Replace("%%MESSAGE%%", text);
             using (StreamWriter sw = File.AppendText(fullFilePath))
             {
