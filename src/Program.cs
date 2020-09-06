@@ -30,7 +30,21 @@ namespace Hangouts_Takeout_JSON_Parser
                     return retValue;
                 }
 
-                
+                var inFile = new FileInfo(jsonPath);
+                var inDir = inFile.Directory;
+
+                if (!inDir.Exists)
+                {
+                    Log.Warning($"The directory specified does not exist. The program cannot continue: {inDir.FullName}");
+                    return 1;
+                }
+                else if (!inFile.Exists)
+                {
+                    Log.Warning($"The file specified does not exist. The program cannot continue: {inDir.FullName}");
+                    return 1;
+                }
+
+
                 Log.Information($"Attempting to read {jsonPath}. This may take a few minutes.");
                 var regex = new Regex(@"^ROOT.conversations\[\d+\].conversation$");
 
