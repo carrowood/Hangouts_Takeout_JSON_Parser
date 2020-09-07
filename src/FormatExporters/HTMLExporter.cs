@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Hangouts_Takeout_JSON_Parser.FormatExporters
 {
@@ -12,6 +13,8 @@ namespace Hangouts_Takeout_JSON_Parser.FormatExporters
         private DirectoryInfo outputTopDirectory = null;
         private string messageFromSelfTemplate = string.Empty;
         private string messageFromOtherTemplate = string.Empty;
+        private string picFromSelfTemplate = string.Empty;
+        private string picFromOtherTemplate = string.Empty;
         private string headerText = string.Empty;
         private string footerText = string.Empty;
 
@@ -22,6 +25,7 @@ namespace Hangouts_Takeout_JSON_Parser.FormatExporters
         public void Generate(ChatHistory content, DirectoryInfo outputDir)
         {
             CreateOutPutDirIfMissing(outputDir);
+            LoadTemplates();
             outputTopDirectory = outputDir;
 
             var selfId = content.FindSelfParticapantId();
@@ -36,6 +40,31 @@ namespace Hangouts_Takeout_JSON_Parser.FormatExporters
                 Log.Information($"Created subdirectory: {subDirNameForConv}");
                 GenerateConversationHTML(convDir, conv, otherParticipants, otherParticipantNamesAndIds, selfId, selfName);
                 CloseOutAllHtmlFiles(convDir);
+            }
+        }
+
+        private void LoadTemplates()
+        {
+
+            if (string.IsNullOrEmpty(messageFromOtherTemplate))
+            {
+                messageFromOtherTemplate = System.IO.File.ReadAllText(
+              $"{AppDomain.CurrentDomain.BaseDirectory}{Path.DirectorySeparatorChar}HtmlTemplates{Path.DirectorySeparatorChar}MessageFromOther.txt");
+            }
+            if (string.IsNullOrEmpty(messageFromSelfTemplate))
+            {
+                messageFromSelfTemplate = System.IO.File.ReadAllText(
+              $"{AppDomain.CurrentDomain.BaseDirectory}{Path.DirectorySeparatorChar}HtmlTemplates{Path.DirectorySeparatorChar}MessageFromSelf.txt");
+            }
+            if (string.IsNullOrEmpty(picFromOtherTemplate))
+            {
+                picFromOtherTemplate = System.IO.File.ReadAllText(
+              $"{AppDomain.CurrentDomain.BaseDirectory}{Path.DirectorySeparatorChar}HtmlTemplates{Path.DirectorySeparatorChar}PicFromOther.txt");
+            }
+            if (string.IsNullOrEmpty(picFromSelfTemplate))
+            {
+                picFromSelfTemplate = System.IO.File.ReadAllText(
+              $"{AppDomain.CurrentDomain.BaseDirectory}{Path.DirectorySeparatorChar}HtmlTemplates{Path.DirectorySeparatorChar}PicFromSelf.txt");
             }
         }
 
@@ -83,7 +112,7 @@ namespace Hangouts_Takeout_JSON_Parser.FormatExporters
                         }
                         else if (segment?.type?.ToUpper() == "LINK")
                         {
-                            var html = $"<a href=\"{segment.text}\">{segment.text}</a>";
+                            var html = $"<a href=\"{segment.text}\">Link</a>";
                             AppendToFile(fullFilePath, eventDateTime, html, senderName, senderIsSelf);
                         }
                         else if (segment?.type?.ToUpper() == "LINE_BREAK")
@@ -97,7 +126,33 @@ namespace Hangouts_Takeout_JSON_Parser.FormatExporters
                         }
                     }
                 }
+
+                if (chatEvent?.chat_message?.message_content?.attachment != null && (chatEvent?.chat_message?.message_content?.attachment.Length > 0))
+                {
+                    foreach (var attachment in chatEvent?.chat_message?.message_content?.attachment)
+                    {
+                        var fileName = $"{eventDateTime.ToString("yyyy-MM")}.html";
+                        var fullFilePath = $"{convDir}{Path.DirectorySeparatorChar}{fileName}";
+                        if (attachment?.embed_item?.type!= null && attachment.embed_item.type.Length>0 && attachment.embed_item.type[0].ToUpper() == "PLUS_PHOTO")
+                        {
+                            if (attachment?.embed_item?.plus_photo!=null)
+                            {
+                                AppendToFile(fullFilePath, eventDateTime, attachment.embed_item.plus_photo, senderName, senderIsSelf);
+                            }
+                        }
+                        else
+                        {
+                            int i = 0;
+                        }
+                    }
+                }
             }
+        }
+
+        private static string SetTimestamp(DateTime eventDateTime, string content)
+        {
+            content = content.Replace("%%MESSAGETIMESTAMP%%", eventDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            return content;
         }
 
         private void AppendToFile(string fullFilePath, DateTime eventDateTime, string text, string senderName, bool senderIsSelf)
@@ -106,18 +161,57 @@ namespace Hangouts_Takeout_JSON_Parser.FormatExporters
             {
                 CreateNewFile(fullFilePath);
             }
-            if (string.IsNullOrEmpty(messageFromOtherTemplate))
+
+            var content = string.Empty;
+            content = SetSender(senderName, senderIsSelf);
+            content = SetTimestamp(eventDateTime, content);
+            content = content.Replace("%%MESSAGE%%", text);
+            using (StreamWriter sw = File.AppendText(fullFilePath))
             {
-                messageFromOtherTemplate = System.IO.File.ReadAllText(
-              $"{AppDomain.CurrentDomain.BaseDirectory}{Path.DirectorySeparatorChar}HtmlTemplates{Path.DirectorySeparatorChar}MessageFromOther.txt");
+                sw.WriteLine(content);
             }
-            if (string.IsNullOrEmpty(messageFromSelfTemplate))
+            Console.Write(".");
+        }
+
+        private void AppendToFile(string fullFilePath, DateTime eventDateTime, Plus_Photo plusPhoto, string senderName, bool senderIsSelf)
+        {
+            if (!File.Exists(fullFilePath))
             {
-                messageFromSelfTemplate = System.IO.File.ReadAllText(
-              $"{AppDomain.CurrentDomain.BaseDirectory}{Path.DirectorySeparatorChar}HtmlTemplates{Path.DirectorySeparatorChar}MessageFromSelf.txt");
+                CreateNewFile(fullFilePath);
             }
 
             var content = string.Empty;
+
+            if (senderIsSelf)
+            {
+                content = picFromSelfTemplate.Replace("%%SENDERNAME%%", string.Empty);
+                content = content.Replace("%%SELFSENDERNAME%%", senderName);
+            }
+            else
+            {
+                content = picFromOtherTemplate.Replace("%%SELFSENDERNAME%%", string.Empty);
+                content = content.Replace("%%SENDERNAME%%", senderName);
+            }
+            content = SetTimestamp(eventDateTime, content);
+
+
+            StringBuilder html = new StringBuilder();
+            html.Append($"{plusPhoto?.media_type}: <br>");
+            html.Append($"<a href=\"..\\{plusPhoto.FindFileName()}\" >Local File</a> &nbsp; &nbsp;");
+            html.Append($"<a href=\"{plusPhoto.url}\" >Online URL</a> &nbsp; &nbsp;");
+            html.Append($"<a href=\"{plusPhoto.original_content_url}\" >Original URL</a>");
+
+            content = content.Replace("%%PIC%%", html.ToString());
+            using (StreamWriter sw = File.AppendText(fullFilePath))
+            {
+                sw.WriteLine(content);
+            }
+            Console.Write(".");
+        }
+
+        private string SetSender(string senderName, bool senderIsSelf)
+        {
+            string content;
             if (senderIsSelf)
             {
                 content = messageFromSelfTemplate.Replace("%%SENDERNAME%%", string.Empty);
@@ -129,16 +223,10 @@ namespace Hangouts_Takeout_JSON_Parser.FormatExporters
                 content = content.Replace("%%SENDERNAME%%", senderName);
             }
 
-            content = content.Replace("%%MESSAGETIMESTAMP%%", eventDateTime.ToString("yyyy-MM-dd HH:mm:ss"));
-            content = content.Replace("%%MESSAGE%%", text);
-            using (StreamWriter sw = File.AppendText(fullFilePath))
-            {
-                sw.WriteLine(content);
-            }
-            Console.Write(".");
+            return content;
         }
 
-        private void CloseOutAllHtmlFile(FileInfo file, string footerText = null)
+        private void CloseOutHtmlFile(FileInfo file, string footerText = null)
         {
             if (footerText == null)
             {
@@ -155,7 +243,7 @@ namespace Hangouts_Takeout_JSON_Parser.FormatExporters
         {
             foreach (var file in outputTopDirectory.GetFiles("*.html"))
             {
-                CloseOutAllHtmlFile(file);
+                CloseOutHtmlFile(file);
             }
             foreach (var subDir in outputTopDirectory.GetDirectories())
             {

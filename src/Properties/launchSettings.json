@@ -2,7 +2,7 @@
   "profiles": {
     "Hangouts-Takeout-JSON-Parser": {
       "commandName": "Project",
-      "commandLineArgs": "\"D:\\Temp\\2020-08 Hangouts Export\\Takeout\\Hangouts\\Hangouts.json\""
+      "commandLineArgs": "\"D:\\Temp\\2020-08 Hangouts Export\\Hangouts.json\""
     }
   }
 }

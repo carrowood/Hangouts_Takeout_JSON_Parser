@@ -1,0 +1,5 @@
+﻿<div class="PicFromSelf">
+	<span class="PicSelfSenderName">%%SENDERNAME%%</span> 
+	<span class="MsgTimeStamp">%%MESSAGETIMESTAMP%%:</span> 
+	<div class="PicContent">%%PIC%%</div>
+</div>

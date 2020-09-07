@@ -7,13 +7,23 @@
   <title>Hangouts Conversation</title>
 
     <style>
+        a:link, a:visited {
+            color: mediumblue;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        a:hover, a:active {
+            background-color: cornflowerblue;
+        }
+
         .HeaderText {
             color: black;
             max-width: 400px;
             margin: auto;
             text-align: center;
             padding: 10px 10px 10px 10px;
-
         }
         .MessageList {
             border-radius: 25px;
@@ -26,7 +36,16 @@
         .MessageFromSelf {
             padding: 10px 10px 10px 10px;
             border-radius: 25px;
-            background-color: gainsboro;
+            background-color: wheat;
+            margin: 10px 5px 5px 220px;
+            max-width: 350px;
+            justify-items: right;
+        }
+
+        .PicFromSelf {
+            padding: 10px 10px 10px 10px;
+            border-radius: 25px;
+            background-color: lightsteelblue;
             margin: 10px 5px 5px 220px;
             max-width: 350px;
             justify-items: right;
@@ -36,13 +55,42 @@
         .MessageFromOther {
             padding: 10px 10px 10px 10px;
             border-radius: 25px;
-            background-color: aliceblue;
+            background-color: lightblue;
             margin:10px 5px 5px 15px;
+            max-width: 350px;
+        }
+
+
+        .PicFromOther {
+            padding: 10px 10px 10px 10px;
+            border-radius: 25px;
+            background-color: lightsteelblue;
+            margin: 10px 5px 5px 15px;
             max-width: 350px;
         }
 
         .MessageContent {
             color: black;
+        }
+
+        .PicContent {
+            color: black;    
+            border:medium;
+        }
+
+        .PicSelfSenderName {
+            color: blue;
+            font-weight: bold;
+        }
+
+        .PicSenderName {
+            color: red;
+            font-weight: bold;
+        }
+
+        .PicMsgTimeStamp {
+            color: black;
+            font-weight: bold;
         }
 
         .SelfSenderName {
