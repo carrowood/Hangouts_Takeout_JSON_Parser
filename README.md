@@ -1,6 +1,9 @@
 # Hangouts_Takeout_JSON_Parser
 A command line console app to re-create HTML chat conversation files from a "takeout" export JSON file of Hangout's history.
 
+## Dependencies
+.Net Core Framework 3.1
+
 ## Background
 I simply wanted a way to back up all of my chat conversations from Google's Hangouts in a format that was easy to store, easy to read and easy to search. There are several websites that claim to do this, but there is no way I am going to upload years of my chat history to a strange server. 
 
