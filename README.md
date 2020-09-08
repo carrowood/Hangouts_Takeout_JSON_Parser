@@ -21,7 +21,8 @@ The styling of the html can easily be modified by editing the "header.txt" file 
 Usage: Hangouts-Takeout-JSON-Parser.exe "C:\Temp\My Dir\Hangouts.json"
 
 ## Limitations
-- I did not spend anytime identifying or including images or files that were sent and received
+- I did not spend anytime identifying or including files that were sent and received
+- Very limited support for images.  They are not shown inline but rather by links to the URLs provided by the JSON file, and a link to a local file since the Takeouts export includes images when it is extracted.  Many links are broken for unknown issues with the URL provided by the JSON. 
 - Some emojis come through to the html, others don't.  That was not a "must-have" feature for my needs
 - Long html links sent in the chat may over flow the div element that contains them.  CSS is not my strongest talent
 - Disk writing needs to be optimized to limit file open/closes; It wasn't important to me. See Performance below.
